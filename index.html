@@ -14,60 +14,76 @@
 <body>
   <canvas id="gameContainer" width="400" height="400"></canvas>
   <script>
-  window.onload = function() {
-    canvas = document.getElementById('gameContainer');
-    ctx = canvas.getContext('2d');
-    document.addEventListener('keydown', downPushed);
+  window.onload=function() {
+    canvasInstance=document.getElementById("gameContainer");
+    ctx=canvasInstance.getContext("2d");
+    document.addEventListener("keydown", keyPressed);
     setInterval(game, 1000/15);
   }
 
-  //player position
-  px = py = 10;
-  gridSize = tileCount = 20;
-  ax= ay = 15;
+  playerX=playerY=10;
+  gridSize=tileCount=20;
+  appleX=appleY=15;
+  xv=yv=0;
+  trail=[];
+  tail = 5;
 
-  xv = yv = 0;
-  trail = [];
-  tail = 0;
   function game() {
-    px+= xv;
-    py+= yv;
-
-    if(px<0){
-      px = tileCount -1;
+    playerX+=xv;
+    playerY+=yv;
+    if(playerX<0) {
+      playerX= tileCount-1;
     }
-    if(px > tileCount-1){
-      px=0;
+    if(playerX>tileCount-1) {
+      playerX= 0;
     }
-    if(py<0){
-      py = tileCount -1;
+    if(playerY<0) {
+      playerY= tileCount-1;
     }
-    if(py > tileCount-1){
-      py=0;
+    if(playerY>tileCount-1) {
+      playerY= 0;
     }
-    ctx.fillStyle = "black";
-    ctx.fillRect(0,0, canvas.width, canvas.height);
 
+    ctx.fillStyle="black";
+    ctx.fillRect(0,0,canvasInstance.width, canvasInstance.height);
 
+    ctx.fillStyle="lime";
+    for(var i=0;i<trail.length;i++) {
+      ctx.fillRect(trail[i].x*gridSize,trail[i].y*gridSize,gridSize-2,gridSize-2);
+      if(trail[i].x==playerX && trail[i].y==playerY) {
+        tail = 5;
+      }
+    }
 
-    ctx.fillStyle = "red";
-    ctx.fillRect(ax*gridSize, ay*gridSize, gridSize-2, gridSize-2);
+    trail.push({x:playerX,y:playerY});
 
+    while(trail.length>tail) {
+      trail.shift();
+    }
+
+    if(appleX==playerX && appleY==playerY) {
+      tail++;
+      appleX=Math.floor(Math.random()*tileCount);
+      appleY=Math.floor(Math.random()*tileCount);
+    }
+
+    ctx.fillStyle="red";
+    ctx.fillRect(appleX*gridSize,appleY*gridSize,gridSize-2,gridSize-2);
   }
 
-  function downPushed() {
-    switch (expression) {
+  function keyPressed(evt) {
+    switch(evt.keyCode) {
       case 37:
-      xv = 1; yv = 0;
+      xv=-1;yv=0;
       break;
       case 38:
-      xv = 0; yv = 1;
+      xv=0;yv=-1;
       break;
       case 39:
-      xv = 1; yv = 0;
+      xv=1;yv=0;
       break;
       case 40:
-      xv = 0; yv = 1;
+      xv=0;yv=1;
       break;
     }
   }
