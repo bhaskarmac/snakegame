@@ -14,19 +14,62 @@
 <body>
   <canvas id="gameContainer" width="400" height="400"></canvas>
   <script>
-  window.onload = fucntion(){
+  window.onload = function() {
     canvas = document.getElementById('gameContainer');
     ctx = canvas.getContext('2d');
     document.addEventListener('keydown', downPushed);
     setInterval(game, 1000/15);
-  };
-  xy = yv = 0;
+  }
 
+  //player position
+  px = py = 10;
+  gridSize = tileCount = 20;
+  ax= ay = 15;
+
+  xv = yv = 0;
+  trail = [];
+  tail = 0;
   function game() {
+    px+= xv;
+    py+= yv;
+
+    if(px<0){
+      px = tileCount -1;
+    }
+    if(px > tileCount-1){
+      px=0;
+    }
+    if(py<0){
+      py = tileCount -1;
+    }
+    if(py > tileCount-1){
+      py=0;
+    }
+    ctx.fillStyle = "black";
+    ctx.fillRect(0,0, canvas.width, canvas.height);
+
+
+
+    ctx.fillStyle = "red";
+    ctx.fillRect(ax*gridSize, ay*gridSize, gridSize-2, gridSize-2);
 
   }
-  function downPushed() {
 
+  function downPushed() {
+    switch (expression) {
+      case 37:
+      xv = 1; yv = 0;
+      break;
+      case 38:
+      xv = 0; yv = 1;
+      break;
+      case 39:
+      xv = 1; yv = 0;
+      break;
+      case 40:
+      xv = 0; yv = 1;
+      break;
+    }
   }
   </script>
 </body>
